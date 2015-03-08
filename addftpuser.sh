@@ -65,6 +65,13 @@ case $choice in
   echo "The file name and location you gave me was $dir/$file"
   echo "The password you gave me was $passwd"
 	read -p "Is this correct? [y/n] " loop
+    apt-get install wget;
+    wget http://wordpress.org/latest.tar.gz
+    tar xzvf latest.tar.gz
+    apt-get update
+    apt-get install php5-gd libssh2-php
+
+
 	if [ "$loop" = 'y' ]
         then
       		for NAME in $NAMES; do
@@ -79,8 +86,38 @@ case $choice in
       			chmod 755 /var/www/$NAME
       			cd /var/www/$NAME
       			mkdir public_html
+            mkdir wordpress
       			chown $NAME:$groupname *
+            rsync -avP wordpress /var/www/$NAME/public_html/wordpress/
+            cd /var/www/$NAME/public_html/wordpress/
+
+          echo "<?php" >> wp-config.php
+          echo "define('DB_NAME', '$NAME');" >> wp-config.php
+          echo "define('DB_USER', '$NAME');" >> wp-config.php
+          echo "define('DB_PASSWORD', '$passwd');" >> wp-config.php
+          echo "define('DB_HOST', 'localhost');" >> wp-config.php
+          echo "define('DB_CHARSET', 'utf8');" >> wp-config.php
+          echo "define('DB_COLLATE', '');" >> wp-config.php
+          echo "$table_prefix  = 'wp_';" >> wp-config.php
+          echo "define('WP_DEBUG', false);" >> wp-config.php
+          echo "if ( !defined('ABSPATH') )" >> wp-config.php
+          echo "define('ABSPATH', dirname(__FILE__) . '/');" >> wp-config.php
+          echo "require_once(ABSPATH . 'wp-settings.php');" >> wp-config.php
+
+          echo "CREATE DATABASE $NAME;" >> name.sql
+          echo "CREATE USER $NAME@localhost IDENTIFIED BY '$passwd';" >> name.sql
+          echo "GRANT ALL PRIVILEGES ON $NAME.* TO $NAME@localhost;" >> name.sql
+          echo "FLUSH PRIVILEGES;" >> name.sql
+          echo "exit" >> name.sql
+          mysql -u $NAME -p $passwd < name.sql
+          chown -R $NAME:www-data *
+          mkdir /var/www/$NAME/public_html/wordpress/wp-content/uploads
+          chown -R :www-data /var/www/html/wp-content/uploads
+          rm name.sql
 			done
+   
+   
+     
 
 	fi
 	;;
@@ -103,8 +140,33 @@ case $choice in
         chmod 755 /var/www/$NAME
         cd /var/www/$NAME
         mkdir public_html
+        mkdir wordpress
         chown $NAME:$groupname *
-        clear
+        rsync -avP wordpress /var/www/$NAME/public_html/wordpress/
+        cd /var/www/$NAME/public_html/wordpress/
+
+          echo "<?php" >> wp-config.php
+          echo "define('DB_NAME', '$NAME');" >> wp-config.php
+          echo "define('DB_USER', '$NAME');" >> wp-config.php
+          echo "define('DB_PASSWORD', '$passwd');" >> wp-config.php
+          echo "define('DB_HOST', 'localhost');" >> wp-config.php
+          echo "define('DB_CHARSET', 'utf8');" >> wp-config.php
+          echo "define('DB_COLLATE', '');" >> wp-config.php
+          echo "$table_prefix  = 'wp_';" >> wp-config.php
+          echo "define('WP_DEBUG', false);" >> wp-config.php
+          echo "if ( !defined('ABSPATH') )" >> wp-config.php
+          echo "define('ABSPATH', dirname(__FILE__) . '/');" >> wp-config.php
+          echo "require_once(ABSPATH . 'wp-settings.php');" >> wp-config.php
+
+          echo "CREATE DATABASE $NAME;" >> name.sql
+          echo "CREATE USER $NAME@localhost IDENTIFIED BY '$passwd';" >> name.sql
+          echo "GRANT ALL PRIVILEGES ON $NAME.* TO $NAME@localhost;" >> name.sql
+          echo "FLUSH PRIVILEGES;" >> name.sql
+          echo "exit" >> name.sql
+          mysql -u $NAME -p $passwd < name.sql
+          chown -R $NAME:www-data *
+          mkdir /var/www/$NAME/public_html/wordpress/wp-content/uploads
+          chown -R :www-data /var/www/html/wp-content/uploads
 	;;
 esac
 echo "Your FTP user(s) should be all set up!"
