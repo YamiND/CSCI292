@@ -103,8 +103,8 @@ case $choice in
       echo "For simplicity, all passwords will be the same"
       echo ""
       echo ""
-      echo "What would you like the user(s) passwords to be? " 
-      read -s passwd
+      read -p "What would you like the user(s) passwords to be? " passwd
+      
       echo "The file name and location you gave me was $dir/$file"
       echo "The password you gave me was $passwd"
       read -p "Is this correct? [y/n] " loop
@@ -133,8 +133,7 @@ case $choice in
             echo "Now we need to set the users password."
             echo ""
             echo ""
-            echo "What would you like the user(s) passwords to be? " 
-            read -s passwd
+            read -p "What would you like the user(s) passwords to be? " passwd
             echo ""
             read -p "The password you entered was $passwd. Is this correct? [y/n] " loop
       if [ "$loop" = 'y' ]
