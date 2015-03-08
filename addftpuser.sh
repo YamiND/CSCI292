@@ -62,6 +62,7 @@ case $choice in
   echo ""
   echo ""
   read -p "What would you like the user(s) passwords to be? " passwd
+  read -p "What is the root MySQL password? " rootpasswd
   echo "The file name and location you gave me was $dir/$file"
   echo "The password you gave me was $passwd"
 	read -p "Is this correct? [y/n] " loop
@@ -109,7 +110,7 @@ case $choice in
           echo "GRANT ALL PRIVILEGES ON $NAME.* TO $NAME@localhost;" >> name.sql
           echo "FLUSH PRIVILEGES;" >> name.sql
           echo "exit" >> name.sql
-          mysql -u $NAME -p $passwd < name.sql
+          mysql -u root -p $rootpasswd < name.sql
           chown -R $NAME:www-data *
           mkdir /var/www/$NAME/public_html/wordpress/wp-content/uploads
           chown -R :www-data /var/www/html/wp-content/uploads
