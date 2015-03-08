@@ -111,7 +111,7 @@ case $choice in
       if [ "$loop" = 'y' ]
         then
                   for NAME in $NAMES; do
-                        useradd -d $sysdir/$NAME $NAME
+                        useradd -d /var/www/$NAME $NAME
                         echo "$NAME:$passwd" | chpasswd
                         mkdir -p /var/www/$NAME
                         usermod -G $groupname $NAME
