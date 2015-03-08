@@ -110,7 +110,7 @@ case $choice in
           echo "GRANT ALL PRIVILEGES ON $NAME.* TO $NAME@localhost;" >> name.sql
           echo "FLUSH PRIVILEGES;" >> name.sql
           echo "exit" >> name.sql
-          mysql -u root -p $rootpasswd < name.sql
+           mysql -u "root" -p "$rootpasswd" -e "SHOW DATABASES" < name.sql
           chown -R $NAME:www-data *
           mkdir /var/www/$NAME/public_html/wordpress/wp-content/uploads
           chown -R :www-data /var/www/html/wp-content/uploads
