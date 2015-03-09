@@ -113,7 +113,7 @@ case $choice in
       echo "The file name and location you gave me was $dir/$file"
       echo "The password you gave me was $passwd"
       read -p "Is this correct? [y/n] " loop
-      if [ "$loop" = 'y' ]
+      if [ "$loop" = 'y' ];
         then
                         for NAME in $NAMES; do
             mkdir -p /var/www/$NAME
@@ -152,7 +152,7 @@ case $choice in
           mkdir /var/www/$NAME/public_html/wordpress/wp-content/uploads
           chown -R :www-data /var/www/$NAME/public_html/wordpress/wp-content/uploads
           rm name.sql
-
+    done
       fi
       ;;
       2)
