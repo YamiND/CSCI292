@@ -87,21 +87,20 @@ case $choice in
       			chmod 755 /var/www/$NAME
       			mkdir /var/www/$NAME/public_html
       			chown $NAME:$groupname *
-            rsync -avP wordpress/ /var/www/$NAME/public_html/wordpress
-            cd /var/www/$NAME/public_html/wordpress/
+            cp -avr wordpress/ /var/www/$NAME/public_html/
 
-          echo "<?php" >> wp-config.php
-          echo "define('DB_NAME', '$NAME');" >> wp-config.php
-          echo "define('DB_USER', '$NAME');" >> wp-config.php
-          echo "define('DB_PASSWORD', '$passwd');" >> wp-config.php
-          echo "define('DB_HOST', 'localhost');" >> wp-config.php
-          echo "define('DB_CHARSET', 'utf8');" >> wp-config.php
-          echo "define('DB_COLLATE', '');" >> wp-config.php
-          echo "$table_prefix  = 'wp_';" >> wp-config.php
-          echo "define('WP_DEBUG', false);" >> wp-config.php
-          echo "if ( !defined('ABSPATH') )" >> wp-config.php
-          echo "define('ABSPATH', dirname(__FILE__) . '/');" >> wp-config.php
-          echo "require_once(ABSPATH . 'wp-settings.php');" >> wp-config.php
+          echo "<?php" >> /var/www/$NAME/public_html/wordpress/wp-config.php
+          echo "define('DB_NAME', '$NAME');" >> /var/www/$NAME/public_html/wordpress/wp-config.php
+          echo "define('DB_USER', '$NAME');" >> /var/www/$NAME/public_html/wordpress/wp-config.php
+          echo "define('DB_PASSWORD', '$passwd');" >> /var/www/$NAME/public_html/wordpress/wp-config.php
+          echo "define('DB_HOST', 'localhost');" >> /var/www/$NAME/public_html/wordpress/wp-config.php
+          echo "define('DB_CHARSET', 'utf8');" >> /var/www/$NAME/public_html/wordpress/wp-config.php
+          echo "define('DB_COLLATE', '');" >> /var/www/$NAME/public_html/wordpress/wp-config.php
+          echo "$table_prefix  = 'wp_';" >> /var/www/$NAME/public_html/wordpress/wp-config.php
+          echo "define('WP_DEBUG', false);" >> /var/www/$NAME/public_html/wordpress/wp-config.php
+          echo "if ( !defined('ABSPATH') )" >> /var/www/$NAME/public_html/wordpress/wp-config.php
+          echo "define('ABSPATH', dirname(__FILE__) . '/');" >> /var/www/$NAME/public_html/wordpress/wp-config.php
+          echo "require_once(ABSPATH . 'wp-settings.php');" >> /var/www/$NAME/public_html/wordpress/wp-config.php
 
           echo "CREATE DATABASE $NAME;" >> name.sql
           echo "CREATE USER $NAME@localhost IDENTIFIED BY '$passwd';" >> name.sql
@@ -139,21 +138,20 @@ case $choice in
         chmod 755 /var/www/$NAME
         mkdir /var/www/$NAME/public_html
         chown $NAME:$groupname *
-        rsync -avP wordpress/ /var/www/$NAME/public_html/wordpress
-        cd /var/www/$NAME/public_html/wordpress/
+        cp -avr wordpress/ /var/www/$NAME/public_html/
 
-          echo "<?php" >> wp-config.php
-          echo "define('DB_NAME', '$NAME');" >> wp-config.php
-          echo "define('DB_USER', '$NAME');" >> wp-config.php
-          echo "define('DB_PASSWORD', '$passwd');" >> wp-config.php
-          echo "define('DB_HOST', 'localhost');" >> wp-config.php
-          echo "define('DB_CHARSET', 'utf8');" >> wp-config.php
-          echo "define('DB_COLLATE', '');" >> wp-config.php
-          echo "$table_prefix  = 'wp_';" >> wp-config.php
-          echo "define('WP_DEBUG', false);" >> wp-config.php
-          echo "if ( !defined('ABSPATH') )" >> wp-config.php
-          echo "define('ABSPATH', dirname(__FILE__) . '/');" >> wp-config.php
-          echo "require_once(ABSPATH . 'wp-settings.php');" >> wp-config.php
+          echo "<?php" >> /var/www/$NAME/public_html/wordpress/wp-config.php
+          echo "define('DB_NAME', '$NAME');" >> /var/www/$NAME/public_html/wordpress/wp-config.php
+          echo "define('DB_USER', '$NAME');" >> /var/www/$NAME/public_html/wordpress/wp-config.php
+          echo "define('DB_PASSWORD', '$passwd');" >> /var/www/$NAME/public_html/wordpress/wp-config.php
+          echo "define('DB_HOST', 'localhost');" >> /var/www/$NAME/public_html/wordpress/wp-config.php
+          echo "define('DB_CHARSET', 'utf8');" >> /var/www/$NAME/public_html/wordpress/wp-config.php
+          echo "define('DB_COLLATE', '');" >> /var/www/$NAME/public_html/wordpress/wp-config.php
+          echo "$table_prefix  = 'wp_';" >> /var/www/$NAME/public_html/wordpress/wp-config.php
+          echo "define('WP_DEBUG', false);" >> /var/www/$NAME/public_html/wordpress/wp-config.php
+          echo "if ( !defined('ABSPATH') )" >> /var/www/$NAME/public_html/wordpress/wp-config.php
+          echo "define('ABSPATH', dirname(__FILE__) . '/');" >> /var/www/$NAME/public_html/wordpress/wp-config.php
+          echo "require_once(ABSPATH . 'wp-settings.php');" >> /var/www/$NAME/public_html/wordpress/wp-config.php
 
           echo "CREATE DATABASE $NAME;" >> name.sql
           echo "CREATE USER $NAME@localhost IDENTIFIED BY '$passwd';" >> name.sql
