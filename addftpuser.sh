@@ -87,7 +87,7 @@ case $choice in
       			chmod 755 /var/www/$NAME
       			mkdir /var/www/$NAME/public_html
       			chown $NAME:$groupname *
-            rsync -avP wordpress /var/www/$NAME/public_html/
+            rsync -avP wordpress/ /var/www/$NAME/public_html/wordpress
             cd /var/www/$NAME/public_html/wordpress/
 
           echo "<?php" >> wp-config.php
@@ -139,7 +139,7 @@ case $choice in
         chmod 755 /var/www/$NAME
         mkdir /var/www/$NAME/public_html
         chown $NAME:$groupname *
-        rsync -avP wordpress/ /var/www/$NAME/public_html/
+        rsync -avP wordpress/ /var/www/$NAME/public_html/wordpress
         cd /var/www/$NAME/public_html/wordpress/
 
           echo "<?php" >> wp-config.php
