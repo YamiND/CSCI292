@@ -76,18 +76,16 @@ case $choice in
 	if [ "$loop" = 'y' ]
         then
       		for NAME in $NAMES; do
+            mkdir -p /var/www/$NAME
       			useradd -d /var/www/$NAME $NAME
             echo "$NAME:$passwd" | chpasswd
-      			mkdir -p /var/www/$NAME
       			usermod -G $groupname $NAME
           if [ "$jail" = 'y' ];
             then
       			chown root:root /var/www/$NAME
           fi
       			chmod 755 /var/www/$NAME
-      			cd /var/www/$NAME
-      			mkdir public_html
-            mkdir wordpress
+      			mkdir /var/www/$NAME/public_html
       			chown $NAME:$groupname *
             rsync -avP wordpress /var/www/$NAME/public_html/wordpress/
             cd /var/www/$NAME/public_html/wordpress/
@@ -113,7 +111,7 @@ case $choice in
            mysql -u "root" -p$rootpasswd < name.sql
           chown -R $NAME:www-data *
           mkdir /var/www/$NAME/public_html/wordpress/wp-content/uploads
-          chown -R :www-data /var/www/html/wp-content/uploads
+          chown -R :www-data /var/www/$NAME/public_html/wordpress/wp-content/uploads
           rm name.sql
 			done
    
@@ -139,12 +137,9 @@ case $choice in
           chown root:root /var/www/$NAME
         fi
         chmod 755 /var/www/$NAME
-        cd /var/www/$NAME
-        mkdir public_html
-        cd /var/www/$NAME/public_html
-        mkdir wordpress
+        mkdir /var/www/$NAME/public_html
         chown $NAME:$groupname *
-        rsync -avP wordpress/ /var/www/$NAME/public_html/wordpress/
+        rsync -avP wordpress/ /var/www/$NAME/public_html/
         cd /var/www/$NAME/public_html/wordpress/
 
           echo "<?php" >> wp-config.php
@@ -168,7 +163,7 @@ case $choice in
           mysql -u $NAME -p$rootpasswd < name.sql
           chown -R $NAME:www-data *
           mkdir /var/www/$NAME/public_html/wordpress/wp-content/uploads
-          chown -R :www-data /var/www/html/wp-content/uploads
+          chown -R :www-data /var/www/$NAME/public_html/wp-content/uploads
 	;;
 esac
 echo "Your FTP user(s) should be all set up!"
