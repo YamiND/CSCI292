@@ -127,9 +127,9 @@ case $choice in
               chown root:root /home/$NAME
           fi
               chmod 0755 /home/$NAME
-              mkdir /home/$NAME/public_html
-              cp -avr wordpress/ /home/$NAME/public_html/
-              cd /home/$NAME/
+              mkdir /var/www/$NAME/public_html
+              cp -avr wordpress/ /var/www/$NAME/public_html/
+              cd /var/www/$NAME/
               chmod -R 755 * 
               chown $NAME:$groupname *
               echo "/var/www/$NAME /home/$NAME/public_html none bind 0 0" >> /etc/fstab
@@ -183,9 +183,9 @@ case $choice in
               chown root:root /home/$NAME
           fi
               chmod 0755 /home/$NAME
-              mkdir /home/$NAME/public_html
-              cp -avr wordpress/ /home/$NAME/public_html/
-              cd /home/$NAME/
+              mkdir /var/www/$NAME/public_html
+              cp -avr wordpress/ /var/www/$NAME/public_html/
+              cd /var/www/$NAME/public_html/
               chmod -R 755 * 
               chown $NAME:$groupname *
               echo "/var/www/$NAME /home/$NAME/public_html none bind 0 0" >> /etc/fstab
