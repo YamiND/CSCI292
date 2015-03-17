@@ -161,7 +161,8 @@ case $choice in
               mkdir /var/www/$NAME/public_html/wordpress/wp-content/uploads
               chown -R :www-data /var/www/$NAME/public_html/wordpress/wp-content/uploads
               rm name.sql
-              rm latest.tar.gz
+              rm /var/www/$NAME/latest.tar.gz  
+              rm -rf /var/www/$NAME/wordpress
     done
       fi
       ;;
