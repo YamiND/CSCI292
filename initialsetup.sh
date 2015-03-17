@@ -131,8 +131,9 @@ case $choice in
               chown root:root /home/$NAME
           fi
               chmod 0755 /home/$NAME
-              cp -avr wordpress/ /var/www/$NAME/public_html/
               cd /var/www/$NAME/
+              cp -avr wordpress/ /var/www/$NAME/public_html/
+             
               rm latest.tar.gz
               rm -rf wordpress/
               chmod -R 755 * 
@@ -196,8 +197,8 @@ case $choice in
               chown root:root /home/$NAME
           fi
               chmod 0755 /home/$NAME
-              cp -avr wordpress/ /var/www/$NAME/public_html/
               cd /var/www/$NAME/
+              cp -avr wordpress/ /var/www/$NAME/public_html/
               rm latest.tar.gz
               rm -rf wordpress/
               chmod -R 755 * 
