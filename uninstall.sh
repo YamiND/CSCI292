@@ -50,12 +50,19 @@ esac
 read -p "Would you like to delete all users in $groupname? [y/n] " dieusers
 case $dieusers in 
 		y)
+        umount -a
       	grep "$groupname" /etc/group | cut -d ':' -f4 | cut -d ',' -f1- --output-delimiter=$'\n' > deletedusers.txt
       	file="deletedusers.txt"
       	NAMES="$(< $file)"
-
+        read -p "What is the mySQL root password? " rootpasswd
       	for NAME in $NAMES; do
       			deluser --remove-home $NAME
+            rm -rf /var/www/$NAME
+            echo "drop database $NAME;" >> name.sql
+            echo "drop user '$NAME'@'localhost';" >> name.sql
+            echo "FLUSH PRIVILEGES;" >> name.sql
+            echo "exit" >> name.sql
+            mysql -u "root" -p$rootpasswd < name.sql
 			done
 
 		echo "A list of deleted users is located at $file"
