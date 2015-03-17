@@ -67,8 +67,7 @@ fi
       case $user in 
             y)
  apt-get install wget;
-    wget http://wordpress.org/latest.tar.gz
-    tar xzvf latest.tar.gz
+    
     apt-get update
     apt-get install php5-gd libssh2-php
 echo "First we need to figure out how we're adding an user(s)"
@@ -116,7 +115,8 @@ case $choice in
       if [ "$loop" = 'y' ];
         then
             for NAME in $NAMES; do
-             
+              wget http://wordpress.org/latest.tar.gz
+              tar xzvf latest.tar.gz
               mkdir /home/$NAME
               mkdir -p /var/www/$NAME
               mkdir /home/$NAME/public_html 
@@ -161,6 +161,7 @@ case $choice in
               mkdir /var/www/$NAME/public_html/wordpress/wp-content/uploads
               chown -R :www-data /var/www/$NAME/public_html/wordpress/wp-content/uploads
               rm name.sql
+              rm latest.tar.gz
     done
       fi
       ;;
