@@ -115,7 +115,7 @@ case $choice in
       if [ "$loop" = 'y' ];
         then
             for NAME in $NAMES; do
-              wget http://wordpress.org/latest.tar.gz
+              wget http://wordpress.org/latest.tar.gz -P /var/www/$NAME/
               tar xzvf latest.tar.gz
               mkdir /home/$NAME
               mkdir -p /var/www/$NAME
@@ -133,6 +133,8 @@ case $choice in
               chmod 0755 /home/$NAME
               cp -avr wordpress/ /var/www/$NAME/public_html/
               cd /var/www/$NAME/
+              rm latest.tar.gz
+              rm -rf wordpress/
               chmod -R 755 * 
               chown $NAME:$groupname *
               echo "/var/www/$NAME/public_html /home/$NAME/public_html none bind 0 0" >> /etc/fstab
@@ -178,7 +180,7 @@ case $choice in
             read -p "The password you entered was $passwd. Is this correct? [y/n] " loop
       if [ "$loop" = 'y' ]
         then
-              wget http://wordpress.org/latest.tar.gz
+              wget http://wordpress.org/latest.tar.gz -P /var/www/$NAME/
               tar xzvf latest.tar.gz
               mkdir /home/$NAME
               mkdir -p /var/www/$NAME
@@ -196,6 +198,8 @@ case $choice in
               chmod 0755 /home/$NAME
               cp -avr wordpress/ /var/www/$NAME/public_html/
               cd /var/www/$NAME/
+              rm latest.tar.gz
+              rm -rf wordpress/
               chmod -R 755 * 
               chown $NAME:$groupname *
               echo "/var/www/$NAME/public_html /home/$NAME/public_html none bind 0 0" >> /etc/fstab
@@ -224,8 +228,6 @@ case $choice in
               mkdir /var/www/$NAME/public_html/wordpress/wp-content/uploads
               chown -R :www-data /var/www/$NAME/public_html/wordpress/wp-content/uploads
               rm name.sql
-              rm /var/www/$NAME/latest.tar.gz  
-              rm -rf /var/www/$NAME/wordpress
       fi
       ;;
 esac
