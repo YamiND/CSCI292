@@ -120,12 +120,15 @@ case $choice in
                         useradd -d /var/www/$NAME $NAME
             echo "$NAME:$passwd" | chpasswd
                         usermod -G $groupname $NAME
+                        usermod -s /bin/false $NAME
           if [ "$jail" = 'y' ];
             then
                         chown root:root /var/www/$NAME
           fi
-                        chmod 755 /var/www/$NAME
+                        chmod 0755 /var/www/$NAME
                         mkdir /var/www/$NAME/public_html
+                        cd /var/www/$NAME/
+                        chmod -R 755 * 
                         chown $NAME:$groupname *
             cp -avr wordpress/ /var/www/$NAME/public_html/
 
@@ -171,12 +174,15 @@ case $choice in
         useradd -d /var/www/$NAME $NAME
         echo "$NAME:$passwd" | chpasswd
         usermod -G $groupname $NAME
+        usermod -s /bin/false $NAME
         if [ "$jail" = 'y' ];
           then
           chown root:root /var/www/$NAME
         fi
-        chmod 755 /var/www/$NAME
+        chmod 0755 /var/www/$NAME
         mkdir /var/www/$NAME/public_html
+        cd /var/www/$NAME/public_html
+        chmod -R 755 *
         chown $NAME:$groupname *
         cp -avr wordpress/ /var/www/$NAME/public_html/
 
