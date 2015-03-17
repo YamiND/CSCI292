@@ -115,8 +115,7 @@ case $choice in
       if [ "$loop" = 'y' ];
         then
             for NAME in $NAMES; do
-              wget http://wordpress.org/latest.tar.gz -P /var/www/$NAME/
-              tar xzvf latest.tar.gz
+              
               mkdir /home/$NAME
               mkdir -p /var/www/$NAME
               mkdir /home/$NAME/public_html 
@@ -125,6 +124,9 @@ case $choice in
               useradd -d /home/$NAME $NAME
               usermod -G $groupname $NAME
               usermod -s /bin/false $NAME
+
+              wget http://wordpress.org/latest.tar.gz -P /var/www/$NAME/
+              tar xzvf latest.tar.gz
               echo "$NAME:$passwd" | chpasswd         
           if [ "$jail" = 'y' ];
             then
@@ -181,8 +183,7 @@ case $choice in
             read -p "The password you entered was $passwd. Is this correct? [y/n] " loop
       if [ "$loop" = 'y' ]
         then
-              wget http://wordpress.org/latest.tar.gz -P /var/www/$NAME/
-              tar xzvf latest.tar.gz
+              
               mkdir /home/$NAME
               mkdir -p /var/www/$NAME
               mkdir /home/$NAME/public_html 
@@ -191,6 +192,9 @@ case $choice in
               useradd -d /home/$NAME $NAME
               usermod -G $groupname $NAME
               usermod -s /bin/false $NAME
+
+              wget http://wordpress.org/latest.tar.gz -P /var/www/$NAME/
+              tar xzvf latest.tar.gz
               echo "$NAME:$passwd" | chpasswd         
           if [ "$jail" = 'y' ];
             then
