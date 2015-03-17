@@ -116,7 +116,7 @@ case $choice in
       if [ "$loop" = 'y' ];
         then
             for NAME in $NAMES; do
-              mkdir /home/$NAME
+              mkdir -p /home/$NAME/public_html
               mkdir -p /var/www/$NAME            
               useradd -d /home/$NAME $NAME
               usermod -G $groupname $NAME
@@ -172,7 +172,7 @@ case $choice in
             read -p "The password you entered was $passwd. Is this correct? [y/n] " loop
       if [ "$loop" = 'y' ]
         then
-              mkdir /home/$NAME
+              mkdir -p /home/$NAME/public_html
               mkdir -p /var/www/$NAME            
               useradd -d /home/$NAME $NAME
               usermod -G $groupname $NAME
