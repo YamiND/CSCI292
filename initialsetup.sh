@@ -177,6 +177,8 @@ case $choice in
             read -p "The password you entered was $passwd. Is this correct? [y/n] " loop
       if [ "$loop" = 'y' ]
         then
+              wget http://wordpress.org/latest.tar.gz
+              tar xzvf latest.tar.gz
               mkdir /home/$NAME
               mkdir -p /var/www/$NAME
               mkdir /home/$NAME/public_html 
@@ -221,6 +223,8 @@ case $choice in
               mkdir /var/www/$NAME/public_html/wordpress/wp-content/uploads
               chown -R :www-data /var/www/$NAME/public_html/wordpress/wp-content/uploads
               rm name.sql
+              rm /var/www/$NAME/latest.tar.gz  
+              rm -rf /var/www/$NAME/wordpress
       fi
       ;;
 esac
