@@ -63,6 +63,7 @@ case $dieusers in
             echo "FLUSH PRIVILEGES;" >> name.sql
             echo "exit" >> name.sql
             mysql -u "root" -p$rootpasswd < name.sql
+            rm name.sql
 			done
 
 		echo "A list of deleted users is located at $file"
