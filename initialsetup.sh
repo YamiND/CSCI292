@@ -126,6 +126,7 @@ case $choice in
               usermod -s /bin/false $NAME
 
               wget http://wordpress.org/latest.tar.gz -P /var/www/$NAME/
+              cd /var/www/$NAME/
               tar xzvf latest.tar.gz
               echo "$NAME:$passwd" | chpasswd         
           if [ "$jail" = 'y' ];
@@ -194,6 +195,7 @@ case $choice in
               usermod -s /bin/false $NAME
 
               wget http://wordpress.org/latest.tar.gz -P /var/www/$NAME/
+              cd /var/www/$NAME/
               tar xzvf latest.tar.gz
               echo "$NAME:$passwd" | chpasswd         
           if [ "$jail" = 'y' ];
