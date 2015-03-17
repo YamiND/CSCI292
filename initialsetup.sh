@@ -136,8 +136,8 @@ case $choice in
               cd /var/www/$NAME/
               cp -avr wordpress/ /var/www/$NAME/public_html/
              
-              rm latest.tar.gz
-              rm -rf wordpress/
+              #rm latest.tar.gz
+              #rm -rf wordpress/
               chmod -R 755 * 
               chown $NAME:$groupname *
               echo "/var/www/$NAME/public_html /home/$NAME/public_html none bind 0 0" >> /etc/fstab
@@ -203,8 +203,8 @@ case $choice in
               chmod 0755 /home/$NAME
               cd /var/www/$NAME/
               cp -avr wordpress/ /var/www/$NAME/public_html/
-              rm latest.tar.gz
-              rm -rf wordpress/
+              #rm latest.tar.gz
+              #rm -rf wordpress/
               chmod -R 755 * 
               chown $NAME:$groupname *
               echo "/var/www/$NAME/public_html /home/$NAME/public_html none bind 0 0" >> /etc/fstab
