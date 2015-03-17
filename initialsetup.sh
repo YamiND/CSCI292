@@ -115,22 +115,24 @@ case $choice in
       read -p "Is this correct? [y/n] " loop
       if [ "$loop" = 'y' ];
         then
-                        for NAME in $NAMES; do
-            mkdir -p /var/www/$NAME
-                        useradd -d /var/www/$NAME $NAME
-            echo "$NAME:$passwd" | chpasswd
-                        usermod -G $groupname $NAME
-                        usermod -s /bin/false $NAME
+            for NAME in $NAMES; do
+              mkdir /home/$NAME
+              mkdir -p /var/www/$NAME            
+              useradd -d /home/$NAME $NAME
+              usermod -G $groupname $NAME
+              usermod -s /bin/false $NAME
+              echo "$NAME:$passwd" | chpasswd         
           if [ "$jail" = 'y' ];
             then
-                        chown root:root /var/www/$NAME
+              chown root:root /home/$NAME
           fi
-                        chmod 0755 /var/www/$NAME
-                        mkdir /var/www/$NAME/public_html
-                        cd /var/www/$NAME/
-                        chmod -R 755 * 
-                        chown $NAME:$groupname *
-            cp -avr wordpress/ /var/www/$NAME/public_html/
+              chmod 0755 /home/$NAME
+              mkdir /home/$NAME/public_html
+              cp -avr wordpress/ /home/$NAME/public_html/
+              cd /home/$NAME/
+              chmod -R 755 * 
+              chown $NAME:$groupname *
+              echo "/var/www/$NAME /home/$NAME/public_html none bind 0 0" >> /etc/fstab
 
           echo "<?php" >> /var/www/$NAME/public_html/wordpress/wp-config.php
           echo "define('DB_NAME', '$NAME');" >> /var/www/$NAME/public_html/wordpress/wp-config.php
@@ -170,21 +172,24 @@ case $choice in
             read -p "The password you entered was $passwd. Is this correct? [y/n] " loop
       if [ "$loop" = 'y' ]
         then
-        mkdir -p /var/www/$NAME
-        useradd -d /var/www/$NAME $NAME
-        echo "$NAME:$passwd" | chpasswd
-        usermod -G $groupname $NAME
-        usermod -s /bin/false $NAME
-        if [ "$jail" = 'y' ];
-          then
-          chown root:root /var/www/$NAME
-        fi
-        chmod 0755 /var/www/$NAME
-        mkdir /var/www/$NAME/public_html
-        cd /var/www/$NAME/public_html
-        chmod -R 755 *
-        chown $NAME:$groupname *
-        cp -avr wordpress/ /var/www/$NAME/public_html/
+              mkdir /home/$NAME
+              mkdir -p /var/www/$NAME            
+              useradd -d /home/$NAME $NAME
+              usermod -G $groupname $NAME
+              usermod -s /bin/false $NAME
+              echo "$NAME:$passwd" | chpasswd         
+          if [ "$jail" = 'y' ];
+            then
+              chown root:root /home/$NAME
+          fi
+              chmod 0755 /home/$NAME
+              mkdir /home/$NAME/public_html
+              cp -avr wordpress/ /home/$NAME/public_html/
+              cd /home/$NAME/
+              chmod -R 755 * 
+              chown $NAME:$groupname *
+              echo "/var/www/$NAME /home/$NAME/public_html none bind 0 0" >> /etc/fstab
+     
 
           echo "<?php" >> /var/www/$NAME/public_html/wordpress/wp-config.php
           echo "define('DB_NAME', '$NAME');" >> /var/www/$NAME/public_html/wordpress/wp-config.php
@@ -215,4 +220,5 @@ esac
             n)
             ;;
       esac
+      mount -a
       echo "Your sftp server should be set up!"
