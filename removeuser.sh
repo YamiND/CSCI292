@@ -47,16 +47,30 @@ case $choice in
 	read -p "Is this correct? [y/n] " loop
 	if [ "$loop" = 'y' ]
         then
-       	clear  
-      		for NAME in $NAMES; do
+       	   read -p "What is the mySQL root password? " rootpasswd
+      	for NAME in $NAMES; do
       			deluser --remove-home $NAME
+            rm -rf /var/www/$NAME
+            echo "drop database $NAME;" >> name.sql
+            echo "drop user '$NAME'@'localhost';" >> name.sql
+            echo "FLUSH PRIVILEGES;" >> name.sql
+            echo "exit" >> name.sql
+            mysql -u "root" -p$rootpasswd < name.sql
+            rm name.sql
 			done
 	fi
 	;;
 	2)
 	clear
 	read -p "What is the name of the FTP user you with to remove? " NAME
-		deluser --remove-home $NAME
+			deluser --remove-home $NAME
+            rm -rf /var/www/$NAME
+            echo "drop database $NAME;" >> name.sql
+            echo "drop user '$NAME'@'localhost';" >> name.sql
+            echo "FLUSH PRIVILEGES;" >> name.sql
+            echo "exit" >> name.sql
+            mysql -u "root" -p$rootpasswd < name.sql
+            rm name.sql
 	;;
 esac
 
