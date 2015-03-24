@@ -77,33 +77,43 @@ case $choice in
         then
             for NAME in $NAMES; do
               
+              #Make the directories for the users
               mkdir /home/$NAME
               mkdir -p /var/www/$NAME
               mkdir /home/$NAME/public_html 
               mkdir /var/www/$NAME/public_html  
 
+              #Add the users and secure the crap out of them
               useradd -d /home/$NAME $NAME
               usermod -G $groupname $NAME
               usermod -s /bin/false $NAME
 
+              #Grab the latest version of wordpress and extract
               wget http://wordpress.org/latest.tar.gz -P /var/www/$NAME/
               cd /var/www/$NAME/
               tar xzvf latest.tar.gz
-              echo "$NAME:$passwd" | chpasswd         
+
+              #Change the password of the user
+              echo "$NAME:$passwd" | chpasswd  
+
           if [ "$jail" = 'y' ];
             then
+              #If the users are jailed root needs to own their directory
               chown root:root /home/$NAME
           fi
               chmod 0755 /home/$NAME
               cd /var/www/$NAME/
               cp -avr wordpress/ /var/www/$NAME/public_html/
              
-              #rm latest.tar.gz
-              #rm -rf wordpress/
+              #Give ownership
               chmod -R 755 * 
               chown $NAME:$groupname *
+
+              #To CHROOT the users we need to put in a folder that their account owns
+              #We partially escape the CHROOT by binding to a folder in their home directory
               echo "/var/www/$NAME/public_html /home/$NAME/public_html none bind 0 0" >> /etc/fstab
 
+              #Some wordpress php database config info
               echo "<?php" >> /var/www/$NAME/public_html/wordpress/wp-config.php
               echo "define('DB_NAME', '$NAME');" >> /var/www/$NAME/public_html/wordpress/wp-config.php
               echo "define('DB_USER', '$NAME');" >> /var/www/$NAME/public_html/wordpress/wp-config.php
@@ -117,6 +127,7 @@ case $choice in
               echo "define('ABSPATH', dirname(__FILE__) . '/');" >> /var/www/$NAME/public_html/wordpress/wp-config.php
               echo "require_once(ABSPATH . 'wp-settings.php');" >> /var/www/$NAME/public_html/wordpress/wp-config.php
 
+              #A .sql for granting permissions to a wordpress database
               echo "CREATE DATABASE $NAME;" >> name.sql
               echo "CREATE USER $NAME@localhost IDENTIFIED BY '$passwd';" >> name.sql
               echo "GRANT ALL PRIVILEGES ON $NAME.* TO $NAME@localhost;" >> name.sql
@@ -124,9 +135,12 @@ case $choice in
               echo "exit" >> name.sql
               mysql -u "root" -p$rootpasswd < name.sql
               
+              #Apply permissions to the directories
               chown -R $NAME:www-data *
               mkdir /var/www/$NAME/public_html/wordpress/wp-content/uploads
               chown -R :www-data /var/www/$NAME/public_html/wordpress/wp-content/uploads
+
+              #Cleaning up
               rm name.sql
               rm /var/www/$NAME/latest.tar.gz  
               rm -rf /var/www/$NAME/wordpress
@@ -143,33 +157,41 @@ case $choice in
 		echo ""
        if [ "$loop" = 'y' ]
         then
-              
+              #Make the directories for the users
               mkdir /home/$NAME
               mkdir -p /var/www/$NAME
               mkdir /home/$NAME/public_html 
               mkdir /var/www/$NAME/public_html  
 
+              #Add the users and secure the crap out of them
               useradd -d /home/$NAME $NAME
               usermod -G $groupname $NAME
               usermod -s /bin/false $NAME
 
+              #Grab the latest version of wordpress and extract
               wget http://wordpress.org/latest.tar.gz -P /var/www/$NAME/
               cd /var/www/$NAME/
               tar xzvf latest.tar.gz
+              
+              #Change the password of the user
               echo "$NAME:$passwd" | chpasswd         
+          
           if [ "$jail" = 'y' ];
             then
+              #If the users are jailed root needs to own their directory
               chown root:root /home/$NAME
           fi
               chmod 0755 /home/$NAME
               cd /var/www/$NAME/
               cp -avr wordpress/ /var/www/$NAME/public_html/
-              #rm latest.tar.gz
-              #rm -rf wordpress/
+              #Give ownership
               chmod -R 755 * 
               chown $NAME:$groupname *
+              #To CHROOT the users we need to put in a folder that their account owns
+              #We partially escape the CHROOT by binding to a folder in their home directory
               echo "/var/www/$NAME/public_html /home/$NAME/public_html none bind 0 0" >> /etc/fstab
 
+              #Some wordpress php database config info
               echo "<?php" >> /var/www/$NAME/public_html/wordpress/wp-config.php
               echo "define('DB_NAME', '$NAME');" >> /var/www/$NAME/public_html/wordpress/wp-config.php
               echo "define('DB_USER', '$NAME');" >> /var/www/$NAME/public_html/wordpress/wp-config.php
@@ -183,6 +205,7 @@ case $choice in
               echo "define('ABSPATH', dirname(__FILE__) . '/');" >> /var/www/$NAME/public_html/wordpress/wp-config.php
               echo "require_once(ABSPATH . 'wp-settings.php');" >> /var/www/$NAME/public_html/wordpress/wp-config.php
 
+              #A .sql for granting permissions to a wordpress database
               echo "CREATE DATABASE $NAME;" >> name.sql
               echo "CREATE USER $NAME@localhost IDENTIFIED BY '$passwd';" >> name.sql
               echo "GRANT ALL PRIVILEGES ON $NAME.* TO $NAME@localhost;" >> name.sql
@@ -190,10 +213,15 @@ case $choice in
               echo "exit" >> name.sql
               mysql -u "root" -p$rootpasswd < name.sql
               
+              #Apply permissions to the directories
               chown -R $NAME:www-data *
               mkdir /var/www/$NAME/public_html/wordpress/wp-content/uploads
               chown -R :www-data /var/www/$NAME/public_html/wordpress/wp-content/uploads
+
+              #Cleaning up
               rm name.sql
+              rm /var/www/$NAME/latest.tar.gz  
+              rm -rf /var/www/$NAME/wordpress
       fi
 	;;
 esac
