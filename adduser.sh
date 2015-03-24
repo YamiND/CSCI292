@@ -73,50 +73,64 @@ case $choice in
     apt-get install php5-gd libssh2-php
 
 
-	if [ "$loop" = 'y' ]
+	if [ "$loop" = 'y' ];
         then
-      		for NAME in $NAMES; do
-            mkdir -p /var/www/$NAME
-      			useradd -d /var/www/$NAME $NAME
-            echo "$NAME:$passwd" | chpasswd
-      			usermod -G $groupname $NAME
+            for NAME in $NAMES; do
+              
+              mkdir /home/$NAME
+              mkdir -p /var/www/$NAME
+              mkdir /home/$NAME/public_html 
+              mkdir /var/www/$NAME/public_html  
+
+              useradd -d /home/$NAME $NAME
+              usermod -G $groupname $NAME
+              usermod -s /bin/false $NAME
+
+              wget http://wordpress.org/latest.tar.gz -P /var/www/$NAME/
+              cd /var/www/$NAME/
+              tar xzvf latest.tar.gz
+              echo "$NAME:$passwd" | chpasswd         
           if [ "$jail" = 'y' ];
             then
-      			chown root:root /var/www/$NAME
+              chown root:root /home/$NAME
           fi
-      			chmod 755 /var/www/$NAME
-      			mkdir /var/www/$NAME/public_html
-      			chown $NAME:$groupname *
-            cp -avr wordpress/ /var/www/$NAME/public_html/
+              chmod 0755 /home/$NAME
+              cd /var/www/$NAME/
+              cp -avr wordpress/ /var/www/$NAME/public_html/
+             
+              #rm latest.tar.gz
+              #rm -rf wordpress/
+              chmod -R 755 * 
+              chown $NAME:$groupname *
+              echo "/var/www/$NAME/public_html /home/$NAME/public_html none bind 0 0" >> /etc/fstab
 
-          echo "<?php" >> /var/www/$NAME/public_html/wordpress/wp-config.php
-          echo "define('DB_NAME', '$NAME');" >> /var/www/$NAME/public_html/wordpress/wp-config.php
-          echo "define('DB_USER', '$NAME');" >> /var/www/$NAME/public_html/wordpress/wp-config.php
-          echo "define('DB_PASSWORD', '$passwd');" >> /var/www/$NAME/public_html/wordpress/wp-config.php
-          echo "define('DB_HOST', 'localhost');" >> /var/www/$NAME/public_html/wordpress/wp-config.php
-          echo "define('DB_CHARSET', 'utf8');" >> /var/www/$NAME/public_html/wordpress/wp-config.php
-          echo "define('DB_COLLATE', '');" >> /var/www/$NAME/public_html/wordpress/wp-config.php
-          echo '$table_prefix  = 'wp_';' >> /var/www/$NAME/public_html/wordpress/wp-config.php
-          echo "define('WP_DEBUG', false);" >> /var/www/$NAME/public_html/wordpress/wp-config.php
-          echo "if ( !defined('ABSPATH') )" >> /var/www/$NAME/public_html/wordpress/wp-config.php
-          echo "define('ABSPATH', dirname(__FILE__) . '/');" >> /var/www/$NAME/public_html/wordpress/wp-config.php
-          echo "require_once(ABSPATH . 'wp-settings.php');" >> /var/www/$NAME/public_html/wordpress/wp-config.php
+              echo "<?php" >> /var/www/$NAME/public_html/wordpress/wp-config.php
+              echo "define('DB_NAME', '$NAME');" >> /var/www/$NAME/public_html/wordpress/wp-config.php
+              echo "define('DB_USER', '$NAME');" >> /var/www/$NAME/public_html/wordpress/wp-config.php
+              echo "define('DB_PASSWORD', '$passwd');" >> /var/www/$NAME/public_html/wordpress/wp-config.php
+              echo "define('DB_HOST', 'localhost');" >> /var/www/$NAME/public_html/wordpress/wp-config.php
+              echo "define('DB_CHARSET', 'utf8');" >> /var/www/$NAME/public_html/wordpress/wp-config.php
+              echo "define('DB_COLLATE', '');" >> /var/www/$NAME/public_html/wordpress/wp-config.php
+              echo '$table_prefix  = 'wp_';' >> /var/www/$NAME/public_html/wordpress/wp-config.php
+              echo "define('WP_DEBUG', false);" >> /var/www/$NAME/public_html/wordpress/wp-config.php
+              echo "if ( !defined('ABSPATH') )" >> /var/www/$NAME/public_html/wordpress/wp-config.php
+              echo "define('ABSPATH', dirname(__FILE__) . '/');" >> /var/www/$NAME/public_html/wordpress/wp-config.php
+              echo "require_once(ABSPATH . 'wp-settings.php');" >> /var/www/$NAME/public_html/wordpress/wp-config.php
 
-          echo "CREATE DATABASE $NAME;" >> name.sql
-          echo "CREATE USER $NAME@localhost IDENTIFIED BY '$passwd';" >> name.sql
-          echo "GRANT ALL PRIVILEGES ON $NAME.* TO $NAME@localhost;" >> name.sql
-          echo "FLUSH PRIVILEGES;" >> name.sql
-          echo "exit" >> name.sql
-           mysql -u "root" -p$rootpasswd < name.sql
-          chown -R $NAME:www-data *
-          mkdir /var/www/$NAME/public_html/wordpress/wp-content/uploads
-          chown -R :www-data /var/www/$NAME/public_html/wordpress/wp-content/uploads
-          rm name.sql
-			done
-   
-   
-     
-
+              echo "CREATE DATABASE $NAME;" >> name.sql
+              echo "CREATE USER $NAME@localhost IDENTIFIED BY '$passwd';" >> name.sql
+              echo "GRANT ALL PRIVILEGES ON $NAME.* TO $NAME@localhost;" >> name.sql
+              echo "FLUSH PRIVILEGES;" >> name.sql
+              echo "exit" >> name.sql
+              mysql -u "root" -p$rootpasswd < name.sql
+              
+              chown -R $NAME:www-data *
+              mkdir /var/www/$NAME/public_html/wordpress/wp-content/uploads
+              chown -R :www-data /var/www/$NAME/public_html/wordpress/wp-content/uploads
+              rm name.sql
+              rm /var/www/$NAME/latest.tar.gz  
+              rm -rf /var/www/$NAME/wordpress
+    done
 	fi
 	;;
 	2)
@@ -127,41 +141,60 @@ case $choice in
     read -p "What would you like the user(s) passwords to be? " passwd
     echo "The password you gave me was $passwd"
 		echo ""
-        mkdir -p /var/www/$NAME
-        useradd -d /var/www/$NAME $NAME
-        echo "$NAME:$passwd" | chpasswd
-        usermod -G $groupname $NAME
-        if [ "$jail" = 'y' ];
-          then
-          chown root:root /var/www/$NAME
-        fi
-        chmod 755 /var/www/$NAME
-        mkdir /var/www/$NAME/public_html
-        chown $NAME:$groupname *
-        cp -avr wordpress/ /var/www/$NAME/public_html/
+       if [ "$loop" = 'y' ]
+        then
+              
+              mkdir /home/$NAME
+              mkdir -p /var/www/$NAME
+              mkdir /home/$NAME/public_html 
+              mkdir /var/www/$NAME/public_html  
 
-          echo "<?php" >> /var/www/$NAME/public_html/wordpress/wp-config.php
-          echo "define('DB_NAME', '$NAME');" >> /var/www/$NAME/public_html/wordpress/wp-config.php
-          echo "define('DB_USER', '$NAME');" >> /var/www/$NAME/public_html/wordpress/wp-config.php
-          echo "define('DB_PASSWORD', '$passwd');" >> /var/www/$NAME/public_html/wordpress/wp-config.php
-          echo "define('DB_HOST', 'localhost');" >> /var/www/$NAME/public_html/wordpress/wp-config.php
-          echo "define('DB_CHARSET', 'utf8');" >> /var/www/$NAME/public_html/wordpress/wp-config.php
-          echo "define('DB_COLLATE', '');" >> /var/www/$NAME/public_html/wordpress/wp-config.php
-          echo '$table_prefix  = 'wp_';' >> /var/www/$NAME/public_html/wordpress/wp-config.php
-          echo "define('WP_DEBUG', false);" >> /var/www/$NAME/public_html/wordpress/wp-config.php
-          echo "if ( !defined('ABSPATH') )" >> /var/www/$NAME/public_html/wordpress/wp-config.php
-          echo "define('ABSPATH', dirname(__FILE__) . '/');" >> /var/www/$NAME/public_html/wordpress/wp-config.php
-          echo "require_once(ABSPATH . 'wp-settings.php');" >> /var/www/$NAME/public_html/wordpress/wp-config.php
+              useradd -d /home/$NAME $NAME
+              usermod -G $groupname $NAME
+              usermod -s /bin/false $NAME
 
-          echo "CREATE DATABASE $NAME;" >> name.sql
-          echo "CREATE USER $NAME@localhost IDENTIFIED BY '$passwd';" >> name.sql
-          echo "GRANT ALL PRIVILEGES ON $NAME.* TO $NAME@localhost;" >> name.sql
-          echo "FLUSH PRIVILEGES;" >> name.sql
-          echo "exit" >> name.sql
-          mysql -u $NAME -p$rootpasswd < name.sql
-          chown -R $NAME:www-data *
-          mkdir /var/www/$NAME/public_html/wordpress/wp-content/uploads
-          chown -R :www-data /var/www/$NAME/public_html/wp-content/uploads
+              wget http://wordpress.org/latest.tar.gz -P /var/www/$NAME/
+              cd /var/www/$NAME/
+              tar xzvf latest.tar.gz
+              echo "$NAME:$passwd" | chpasswd         
+          if [ "$jail" = 'y' ];
+            then
+              chown root:root /home/$NAME
+          fi
+              chmod 0755 /home/$NAME
+              cd /var/www/$NAME/
+              cp -avr wordpress/ /var/www/$NAME/public_html/
+              #rm latest.tar.gz
+              #rm -rf wordpress/
+              chmod -R 755 * 
+              chown $NAME:$groupname *
+              echo "/var/www/$NAME/public_html /home/$NAME/public_html none bind 0 0" >> /etc/fstab
+
+              echo "<?php" >> /var/www/$NAME/public_html/wordpress/wp-config.php
+              echo "define('DB_NAME', '$NAME');" >> /var/www/$NAME/public_html/wordpress/wp-config.php
+              echo "define('DB_USER', '$NAME');" >> /var/www/$NAME/public_html/wordpress/wp-config.php
+              echo "define('DB_PASSWORD', '$passwd');" >> /var/www/$NAME/public_html/wordpress/wp-config.php
+              echo "define('DB_HOST', 'localhost');" >> /var/www/$NAME/public_html/wordpress/wp-config.php
+              echo "define('DB_CHARSET', 'utf8');" >> /var/www/$NAME/public_html/wordpress/wp-config.php
+              echo "define('DB_COLLATE', '');" >> /var/www/$NAME/public_html/wordpress/wp-config.php
+              echo '$table_prefix  = 'wp_';' >> /var/www/$NAME/public_html/wordpress/wp-config.php
+              echo "define('WP_DEBUG', false);" >> /var/www/$NAME/public_html/wordpress/wp-config.php
+              echo "if ( !defined('ABSPATH') )" >> /var/www/$NAME/public_html/wordpress/wp-config.php
+              echo "define('ABSPATH', dirname(__FILE__) . '/');" >> /var/www/$NAME/public_html/wordpress/wp-config.php
+              echo "require_once(ABSPATH . 'wp-settings.php');" >> /var/www/$NAME/public_html/wordpress/wp-config.php
+
+              echo "CREATE DATABASE $NAME;" >> name.sql
+              echo "CREATE USER $NAME@localhost IDENTIFIED BY '$passwd';" >> name.sql
+              echo "GRANT ALL PRIVILEGES ON $NAME.* TO $NAME@localhost;" >> name.sql
+              echo "FLUSH PRIVILEGES;" >> name.sql
+              echo "exit" >> name.sql
+              mysql -u "root" -p$rootpasswd < name.sql
+              
+              chown -R $NAME:www-data *
+              mkdir /var/www/$NAME/public_html/wordpress/wp-content/uploads
+              chown -R :www-data /var/www/$NAME/public_html/wordpress/wp-content/uploads
+              rm name.sql
+      fi
 	;;
 esac
 echo "Your FTP user(s) should be all set up!"
