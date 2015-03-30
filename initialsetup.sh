@@ -219,7 +219,7 @@ case $choice in
               #Add the users and secure the crap out of them
               useradd -d /home/$NAME $NAME
               usermod -G $groupname $NAME
-              usermod -s /bin/false $NAME
+              usermod -s /bin/bash $NAME
 
               #Grab the latest version of wordpress and extract
               wget http://wordpress.org/latest.tar.gz -P /var/www/$NAME/
