@@ -151,13 +151,13 @@ case $choice in
               chown root:root /home/$NAME
           fi
               chmod 0755 /home/$NAME
-              chown -R $NAME /home/$NAME/private
+              chown -R $NAME /home/$NAME/private/
               chown -R $NAME /var/www/$NAME/
               cd /var/www/$NAME/
               #cp -avr wordpress/ /var/www/$NAME/
              
               #Give ownership
-              chmod -R 755 * 
+              #chmod -R 755 * 
               chown $NAME:$groupname *
 
               #To CHROOT the users we need to put in a folder that their account owns
