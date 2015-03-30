@@ -18,7 +18,7 @@
 #
 if [[ $EUID -ne 0 ]]; then
   echo "You must be a root user" 2>&1
-  exit 1
+  exit 1./
 fi
       clear
       rm -rf /var/www/html
@@ -151,6 +151,8 @@ case $choice in
               chown root:root /home/$NAME
           fi
               chmod 0755 /home/$NAME
+              chown -R $NAME /home/$NAME/private
+              chown -R $NAME /var/www/$NAME/
               cd /var/www/$NAME/
               #cp -avr wordpress/ /var/www/$NAME/
              
