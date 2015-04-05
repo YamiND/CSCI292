@@ -25,32 +25,6 @@ fi
       echo "This script is meant to be run once on a new system install"
       echo "Or a system where sftp has not already been configured"
       echo "Running this script multiple times may have undesired consequences"
-      #echo ""
-      #echo ""
-      #echo "We can restrict users to their own directory, or give them access to the whole system"
-      #read -p "Would you like to chroot/jail your users? [y/n] " jail
-      #case $jail in 
-      #y)
-       #   echo ""
-        #  echo ""
-		     # read -p "What is the group name that you want for ftp users? " groupname
-
-			    #addgroup --system $groupname
-
-          #Any other subsystem ftp stuff can conflict with what we want
-          #This will delete anything with Subsystem in it
-			    #number=`grep -n "Subsystem" /etc/ssh/sshd_config | cut -d ":" -f1`
-      		#sed -i "${number}d" /etc/ssh/sshd_config
-      		#echo "Subsystem sftp internal-sftp" >> /etc/ssh/sshd_config
-      		#echo "Match Group $groupname" >> /etc/ssh/sshd_config
-      		##echo "ChrootDirectory %h" >> /etc/ssh/sshd_config
-      		#echo "X11Forwarding no" >> /etc/ssh/sshd_config
-      		#echo "AllowTcpForwarding no" >> /etc/ssh/sshd_config
-      		#echo "ForceCommand internal-sftp" >> /etc/ssh/sshd_config
-      		
-      		 # service ssh restart
-            #;;
-      #n)
           echo ""
           echo ""
           read -p "What is the group name that you want for ftp users? " groupname
@@ -62,12 +36,8 @@ fi
           echo "Subsystem sftp internal-sftp" >> /etc/ssh/sshd_config
           echo "Match Group $groupname" >> /etc/ssh/sshd_config
           echo "X11Forwarding no" >> /etc/ssh/sshd_config
-          echo "AllowTcpForwarding no" >> /etc/ssh/sshd_config
-          #echo "ForceCommand internal-sftp" >> /etc/ssh/sshd_config
-                  
-            service ssh restart
-            #;;
-      #esac
+          echo "AllowTcpForwarding no" >> /etc/ssh/sshd_config        
+          service ssh restart
 
       read -p "Do you wish to add a user? [y/n] " user
       
@@ -146,18 +116,16 @@ case $choice in
               echo "$NAME:$passwd" | chpasswd  
 
               chown $NAME /home/$NAME
-              chmod 755 /home/$NAME
               chown -R $NAME /home/$NAME/private/
               chown -R $NAME /var/www/$NAME/
+              chmod 700 /home/$NAME
+              
               cd /var/www/$NAME/
-              #cp -avr wordpress/ /var/www/$NAME/
-             
               #Give ownership
-              #chmod -R 755 * 
-              chown $NAME:$groupname *
 
-              #To CHROOT the users we need to put in a folder that their account owns
-              #We partially escape the CHROOT by binding to a folder in their home directory
+              chown $NAME:$groupname *
+              chmod -R 755 *
+
               echo "/var/www/$NAME/ /home/$NAME/public_html none bind 0 0" >> /etc/fstab
 
               #Some wordpress php database config info
@@ -201,7 +169,7 @@ case $choice in
     read -p "What would you like the user(s) passwords to be? " passwd
     echo "The password you gave me was $passwd"
     echo ""
-               #Make the directories for the users
+             #Make the directories for the users
               mkdir /home/$NAME
               mkdir -p /var/www/$NAME
               mkdir /home/$NAME/public_html 
@@ -223,16 +191,16 @@ case $choice in
               echo "$NAME:$passwd" | chpasswd  
 
               chown $NAME /home/$NAME
-              chmod 755 /home/$NAME
               chown -R $NAME /home/$NAME/private/
               chown -R $NAME /var/www/$NAME/
+              chmod 700 /home/$NAME
+              
               cd /var/www/$NAME/
-             
               #Give ownership
-              chown $NAME:$groupname *
 
-              #To CHROOT the users we need to put in a folder that their account owns
-              #We partially escape the CHROOT by binding to a folder in their home directory
+              chown $NAME:$groupname *
+              chmod -R 755 *
+
               echo "/var/www/$NAME/ /home/$NAME/public_html none bind 0 0" >> /etc/fstab
 
               #Some wordpress php database config info
