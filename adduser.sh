@@ -36,44 +36,36 @@ echo "Second, we need to assign these users to a group"
 read -p "What is the group called? " groupname
 echo ""
 echo ""
-#echo "Third, we need to decide if we're going to 'jail' our users"
-#echo "Jailing/Chrooting is the process of limiting our users to their own directories"
-echo ""
-#read -p "Would you like to Jail/Chroot your users? [y/n] " jail
+
 case $choice in
-	1)
-	echo "I need to know where the list of usernames are"
-	echo "the format you enter the username in the file will be the same way"
-	echo "their directories are named"
-	echo "Unless it is in the same directory as this script,"
-	echo "Please enter the absolute path of the directory"
-	echo "The format of a directory looks like: "
-	echo "/home/username/Downloads"
-	echo ""
-	read -p "What is the directory the text file is located in? " dir
-	echo ""
-	echo "What is the file called?"
-	read -p "Please enter the full text file name: "  file
-	NAMES="$(< $dir/$file)"
-  echo ""
-  echo ""
-  echo "Now we need to set the users passwords."
-  echo "For simplicity, all passwords will be the same"
-  echo ""
-  echo ""
-  read -p "What would you like the user(s) passwords to be? " passwd
-  read -p "What is the root MySQL password? " rootpasswd
-  echo "The file name and location you gave me was $dir/$file"
-  echo "The password you gave me was $passwd"
-	read -p "Is this correct? [y/n] " loop
-    apt-get install wget;
-    wget http://wordpress.org/latest.tar.gz
-    tar xzvf latest.tar.gz
-    apt-get update
-    apt-get install php5-gd libssh2-php
+      1)
+      echo "I need to know where the list of usernames are"
+      echo "the format you enter the username in the file will be the same way"
+      echo "their directories are named"
+      echo "Unless it is in the same directory as this script,"
+      echo "Please enter the absolute path of the directory"
+      echo "The format of a directory looks like: "
+      echo "/home/username/Downloads"
+      echo "Do not put a '/' at the end of your path"
+      echo ""
 
-
-	if [ "$loop" = 'y' ];
+      read -p "What is the directory the text file is located in? " dir
+      echo ""
+      echo "What is the file called?"
+      read -p "Please enter the full text file name: "  file
+      NAMES="$(< $dir/$file)"
+      echo ""
+      echo ""
+      echo "Now we need to set the users passwords."
+      echo "For simplicity, all passwords will be the same"
+      echo ""
+      echo ""
+      read -p "What would you like the user(s) passwords to be? " passwd
+        read -p "What is the root MySQL password? " rootpasswd
+      echo "The file name and location you gave me was $dir/$file"
+      echo "The password you gave me was $passwd"
+      read -p "Is this correct? [y/n] " loop
+     if [ "$loop" = 'y' ];
         then
             for NAME in $NAMES; do
               
@@ -81,12 +73,14 @@ case $choice in
               mkdir /home/$NAME
               mkdir -p /var/www/$NAME
               mkdir /home/$NAME/public_html 
-              mkdir /var/www/$NAME/public_html  
+              mkdir /home/$NAME/private
+
+              mkdir /var/www/$NAME/ 
 
               #Add the users and secure the crap out of them
               useradd -d /home/$NAME $NAME
               usermod -G $groupname $NAME
-              usermod -s /bin/false $NAME
+              usermod -s /bin/bash $NAME
 
               #Grab the latest version of wordpress and extract
               wget http://wordpress.org/latest.tar.gz -P /var/www/$NAME/
@@ -96,37 +90,32 @@ case $choice in
               #Change the password of the user
               echo "$NAME:$passwd" | chpasswd  
 
-          #if [ "$jail" = 'y' ];
-            #then
-              #If the users are jailed root needs to own their directory
-             # chown root:root /home/$NAME
-          #fi
               chown $NAME /home/$NAME
-              chmod 755 /home/$NAME
+              chown -R $NAME /home/$NAME/private/
+              chown -R $NAME /var/www/$NAME/
+              chmod 700 /home/$NAME
+              
               cd /var/www/$NAME/
-              cp -avr wordpress/ /var/www/$NAME/public_html/
-             
               #Give ownership
-              chmod -R 755 * 
-              chown $NAME:$groupname *
 
-              #To CHROOT the users we need to put in a folder that their account owns
-              #We partially escape the CHROOT by binding to a folder in their home directory
-              echo "/var/www/$NAME/public_html /home/$NAME/public_html none bind 0 0" >> /etc/fstab
+              chown $NAME:$groupname *
+              chmod -R 755 *
+
+              echo "/var/www/$NAME/ /home/$NAME/public_html none bind 0 0" >> /etc/fstab
 
               #Some wordpress php database config info
-              echo "<?php" >> /var/www/$NAME/public_html/wordpress/wp-config.php
-              echo "define('DB_NAME', '$NAME');" >> /var/www/$NAME/public_html/wordpress/wp-config.php
-              echo "define('DB_USER', '$NAME');" >> /var/www/$NAME/public_html/wordpress/wp-config.php
-              echo "define('DB_PASSWORD', '$passwd');" >> /var/www/$NAME/public_html/wordpress/wp-config.php
-              echo "define('DB_HOST', 'localhost');" >> /var/www/$NAME/public_html/wordpress/wp-config.php
-              echo "define('DB_CHARSET', 'utf8');" >> /var/www/$NAME/public_html/wordpress/wp-config.php
-              echo "define('DB_COLLATE', '');" >> /var/www/$NAME/public_html/wordpress/wp-config.php
-              echo '$table_prefix  = 'wp_';' >> /var/www/$NAME/public_html/wordpress/wp-config.php
-              echo "define('WP_DEBUG', false);" >> /var/www/$NAME/public_html/wordpress/wp-config.php
-              echo "if ( !defined('ABSPATH') )" >> /var/www/$NAME/public_html/wordpress/wp-config.php
-              echo "define('ABSPATH', dirname(__FILE__) . '/');" >> /var/www/$NAME/public_html/wordpress/wp-config.php
-              echo "require_once(ABSPATH . 'wp-settings.php');" >> /var/www/$NAME/public_html/wordpress/wp-config.php
+              echo "<?php" >> /var/www/$NAME/wordpress/wp-config.php
+              echo "define('DB_NAME', '$NAME');" >> /var/www/$NAME/wordpress/wp-config.php
+              echo "define('DB_USER', '$NAME');" >> /var/www/$NAME/wordpress/wp-config.php
+              echo "define('DB_PASSWORD', '$passwd');" >> /var/www/$NAME/wordpress/wp-config.php
+              echo "define('DB_HOST', 'localhost');" >> /var/www/$NAME/wordpress/wp-config.php
+              echo "define('DB_CHARSET', 'utf8');" >> /var/www/$NAME/wordpress/wp-config.php
+              echo "define('DB_COLLATE', '');" >> /var/www/$NAME/wordpress/wp-config.php
+              echo '$table_prefix  = 'wp_';' >> /var/www/$NAME/wordpress/wp-config.php
+              echo "define('WP_DEBUG', false);" >> /var/www/$NAME/wordpress/wp-config.php
+              echo "if ( !defined('ABSPATH') )" >> /var/www/$NAME/wordpress/wp-config.php
+              echo "define('ABSPATH', dirname(__FILE__) . '/');" >> /var/www/$NAME/wordpress/wp-config.php
+              echo "require_once(ABSPATH . 'wp-settings.php');" >> /var/www/$NAME/wordpress/wp-config.php
 
               #A .sql for granting permissions to a wordpress database
               echo "CREATE DATABASE $NAME;" >> name.sql
@@ -138,74 +127,70 @@ case $choice in
               
               #Apply permissions to the directories
               chown -R $NAME:www-data *
-              mkdir /var/www/$NAME/public_html/wordpress/wp-content/uploads
-              chown -R :www-data /var/www/$NAME/public_html/wordpress/wp-content/uploads
+              mkdir /var/www/$NAME/wordpress/wp-content/uploads
+              chown -R :www-data /var/www/$NAME/wordpress/wp-content/uploads
 
               #Cleaning up
               rm name.sql
               rm /var/www/$NAME/latest.tar.gz  
-              rm -rf /var/www/$NAME/wordpress
     done
-	fi
-	;;
-	2)
-		clear
-		read -p "What is the name of the user you wish to add? " NAME
+  fi
+  ;;
+  2)
+    clear
+    read -p "What is the name of the user you wish to add? " NAME
     echo ""
     echo ""
     read -p "What would you like the user(s) passwords to be? " passwd
     echo "The password you gave me was $passwd"
-		echo ""
-    read -p "Is this info correct? [y/n] " loop
-       if [ "$loop" = 'y' ]
-        then
-              #Make the directories for the users
+    echo ""
+             #Make the directories for the users
               mkdir /home/$NAME
               mkdir -p /var/www/$NAME
               mkdir /home/$NAME/public_html 
-              mkdir /var/www/$NAME/public_html  
+              mkdir /home/$NAME/private
+
+              mkdir /var/www/$NAME/ 
 
               #Add the users and secure the crap out of them
               useradd -d /home/$NAME $NAME
               usermod -G $groupname $NAME
-              usermod -s /bin/false $NAME
+              usermod -s /bin/bash $NAME
 
               #Grab the latest version of wordpress and extract
               wget http://wordpress.org/latest.tar.gz -P /var/www/$NAME/
               cd /var/www/$NAME/
               tar xzvf latest.tar.gz
-              
+
               #Change the password of the user
-              echo "$NAME:$passwd" | chpasswd         
-          
-          #if [ "$jail" = 'y' ];
-            #then
-              #If the users are jailed root needs to own their directory
-              #chown root:root /home/$NAME
-          #fi
-              chmod 0755 /home/$NAME
+              echo "$NAME:$passwd" | chpasswd  
+
+              chown $NAME /home/$NAME
+              chown -R $NAME /home/$NAME/private/
+              chown -R $NAME /var/www/$NAME/
+              chmod 700 /home/$NAME
+              
               cd /var/www/$NAME/
-              cp -avr wordpress/ /var/www/$NAME/public_html/
               #Give ownership
-              chmod -R 755 * 
+
               chown $NAME:$groupname *
-              #To CHROOT the users we need to put in a folder that their account owns
-              #We partially escape the CHROOT by binding to a folder in their home directory
-              echo "/var/www/$NAME/public_html /home/$NAME/public_html none bind 0 0" >> /etc/fstab
+              chmod -R 755 *
+
+              echo "/var/www/$NAME/ /home/$NAME/public_html none bind 0 0" >> /etc/fstab
 
               #Some wordpress php database config info
-              echo "<?php" >> /var/www/$NAME/public_html/wordpress/wp-config.php
-              echo "define('DB_NAME', '$NAME');" >> /var/www/$NAME/public_html/wordpress/wp-config.php
-              echo "define('DB_USER', '$NAME');" >> /var/www/$NAME/public_html/wordpress/wp-config.php
-              echo "define('DB_PASSWORD', '$passwd');" >> /var/www/$NAME/public_html/wordpress/wp-config.php
-              echo "define('DB_HOST', 'localhost');" >> /var/www/$NAME/public_html/wordpress/wp-config.php
-              echo "define('DB_CHARSET', 'utf8');" >> /var/www/$NAME/public_html/wordpress/wp-config.php
-              echo "define('DB_COLLATE', '');" >> /var/www/$NAME/public_html/wordpress/wp-config.php
-              echo '$table_prefix  = 'wp_';' >> /var/www/$NAME/public_html/wordpress/wp-config.php
-              echo "define('WP_DEBUG', false);" >> /var/www/$NAME/public_html/wordpress/wp-config.php
-              echo "if ( !defined('ABSPATH') )" >> /var/www/$NAME/public_html/wordpress/wp-config.php
-              echo "define('ABSPATH', dirname(__FILE__) . '/');" >> /var/www/$NAME/public_html/wordpress/wp-config.php
-              echo "require_once(ABSPATH . 'wp-settings.php');" >> /var/www/$NAME/public_html/wordpress/wp-config.php
+              echo "<?php" >> /var/www/$NAME/wordpress/wp-config.php
+              echo "define('DB_NAME', '$NAME');" >> /var/www/$NAME/wordpress/wp-config.php
+              echo "define('DB_USER', '$NAME');" >> /var/www/$NAME/wordpress/wp-config.php
+              echo "define('DB_PASSWORD', '$passwd');" >> /var/www/$NAME/wordpress/wp-config.php
+              echo "define('DB_HOST', 'localhost');" >> /var/www/$NAME/wordpress/wp-config.php
+              echo "define('DB_CHARSET', 'utf8');" >> /var/www/$NAME/wordpress/wp-config.php
+              echo "define('DB_COLLATE', '');" >> /var/www/$NAME/wordpress/wp-config.php
+              echo '$table_prefix  = 'wp_';' >> /var/www/$NAME/wordpress/wp-config.php
+              echo "define('WP_DEBUG', false);" >> /var/www/$NAME/wordpress/wp-config.php
+              echo "if ( !defined('ABSPATH') )" >> /var/www/$NAME/wordpress/wp-config.php
+              echo "define('ABSPATH', dirname(__FILE__) . '/');" >> /var/www/$NAME/wordpress/wp-config.php
+              echo "require_once(ABSPATH . 'wp-settings.php');" >> /var/www/$NAME/wordpress/wp-config.php
 
               #A .sql for granting permissions to a wordpress database
               echo "CREATE DATABASE $NAME;" >> name.sql
@@ -217,14 +202,17 @@ case $choice in
               
               #Apply permissions to the directories
               chown -R $NAME:www-data *
-              mkdir /var/www/$NAME/public_html/wordpress/wp-content/uploads
-              chown -R :www-data /var/www/$NAME/public_html/wordpress/wp-content/uploads
+              mkdir /var/www/$NAME/wordpress/wp-content/uploads
+              chown -R :www-data /var/www/$NAME/wordpress/wp-content/uploads
 
               #Cleaning up
               rm name.sql
               rm /var/www/$NAME/latest.tar.gz  
-              rm -rf /var/www/$NAME/wordpress
-      fi
-	;;
+  ;;
 esac
+            ;;
+            n)
+            ;;
+      esac
+      mount -a
 echo "Your FTP user(s) should be all set up!"
