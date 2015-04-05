@@ -135,7 +135,7 @@ case $choice in
               #Add the users and secure the crap out of them
               useradd -d /home/$NAME $NAME
               usermod -G $groupname $NAME
-              usermod -s /bin/false $NAME
+              usermod -s /bin/bash $NAME
 
               #Grab the latest version of wordpress and extract
               wget http://wordpress.org/latest.tar.gz -P /var/www/$NAME/
@@ -145,11 +145,6 @@ case $choice in
               #Change the password of the user
               echo "$NAME:$passwd" | chpasswd  
 
-          #if [ "$jail" = 'y' ];
-           # then
-              #If the users are jailed root needs to own their directory
-            #  chown root:root /home/$NAME
-         # fi
               chown $NAME /home/$NAME
               chmod 755 /home/$NAME
               chown -R $NAME /home/$NAME/private/
@@ -195,7 +190,6 @@ case $choice in
               #Cleaning up
               rm name.sql
               rm /var/www/$NAME/latest.tar.gz  
-              #rm -rf /var/www/$NAME/wordpress
     done
   fi
   ;;
@@ -207,16 +201,14 @@ case $choice in
     read -p "What would you like the user(s) passwords to be? " passwd
     echo "The password you gave me was $passwd"
     echo ""
-       if [ "$loop" = 'y' ]
-        then
-              #Make the directories for the users
+               #Make the directories for the users
               mkdir /home/$NAME
               mkdir -p /var/www/$NAME
               mkdir /home/$NAME/public_html 
               mkdir /home/$NAME/private
 
               mkdir /var/www/$NAME/ 
-              
+
               #Add the users and secure the crap out of them
               useradd -d /home/$NAME $NAME
               usermod -G $groupname $NAME
@@ -230,17 +222,13 @@ case $choice in
               #Change the password of the user
               echo "$NAME:$passwd" | chpasswd  
 
-          #if [ "$jail" = 'y' ];
-            #then
-              #If the users are jailed root needs to own their directory
-            #  chown root:root /home/$NAME
-          #fi
-              chmod 0755 /home/$NAME
+              chown $NAME /home/$NAME
+              chmod 755 /home/$NAME
+              chown -R $NAME /home/$NAME/private/
+              chown -R $NAME /var/www/$NAME/
               cd /var/www/$NAME/
-              #cp -avr wordpress/ /var/www/$NAME/
              
               #Give ownership
-              chmod -R 755 * 
               chown $NAME:$groupname *
 
               #To CHROOT the users we need to put in a folder that their account owns
@@ -277,8 +265,6 @@ case $choice in
               #Cleaning up
               rm name.sql
               rm /var/www/$NAME/latest.tar.gz  
-              #rm -rf /var/www/$NAME/wordpress
-      fi
   ;;
 esac
             ;;
