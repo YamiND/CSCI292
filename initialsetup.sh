@@ -150,7 +150,8 @@ case $choice in
               #If the users are jailed root needs to own their directory
             #  chown root:root /home/$NAME
          # fi
-              chmod 0755 /home/$NAME
+              chown $NAME /home/$NAME
+              chmod 755 /home/$NAME
               chown -R $NAME /home/$NAME/private/
               chown -R $NAME /var/www/$NAME/
               cd /var/www/$NAME/
