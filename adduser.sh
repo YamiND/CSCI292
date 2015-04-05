@@ -36,10 +36,10 @@ echo "Second, we need to assign these users to a group"
 read -p "What is the group called? " groupname
 echo ""
 echo ""
-echo "Third, we need to decide if we're going to 'jail' our users"
-echo "Jailing/Chrooting is the process of limiting our users to their own directories"
+#echo "Third, we need to decide if we're going to 'jail' our users"
+#echo "Jailing/Chrooting is the process of limiting our users to their own directories"
 echo ""
-read -p "Would you like to Jail/Chroot your users? [y/n] " jail
+#read -p "Would you like to Jail/Chroot your users? [y/n] " jail
 case $choice in
 	1)
 	echo "I need to know where the list of usernames are"
@@ -96,11 +96,11 @@ case $choice in
               #Change the password of the user
               echo "$NAME:$passwd" | chpasswd  
 
-          if [ "$jail" = 'y' ];
-            then
+          #if [ "$jail" = 'y' ];
+            #then
               #If the users are jailed root needs to own their directory
-              chown root:root /home/$NAME
-          fi
+             # chown root:root /home/$NAME
+          #fi
               chmod 0755 /home/$NAME
               cd /var/www/$NAME/
               cp -avr wordpress/ /var/www/$NAME/public_html/
@@ -177,11 +177,11 @@ case $choice in
               #Change the password of the user
               echo "$NAME:$passwd" | chpasswd         
           
-          if [ "$jail" = 'y' ];
-            then
+          #if [ "$jail" = 'y' ];
+            #then
               #If the users are jailed root needs to own their directory
-              chown root:root /home/$NAME
-          fi
+              #chown root:root /home/$NAME
+          #fi
               chmod 0755 /home/$NAME
               cd /var/www/$NAME/
               cp -avr wordpress/ /var/www/$NAME/public_html/

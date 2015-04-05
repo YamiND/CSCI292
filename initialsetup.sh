@@ -66,8 +66,8 @@ fi
           #echo "ForceCommand internal-sftp" >> /etc/ssh/sshd_config
                   
             service ssh restart
-            ;;
-      esac
+            #;;
+      #esac
 
       read -p "Do you wish to add a user? [y/n] " user
       
