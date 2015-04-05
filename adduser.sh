@@ -155,6 +155,7 @@ case $choice in
     read -p "What would you like the user(s) passwords to be? " passwd
     echo "The password you gave me was $passwd"
 		echo ""
+    read -p "Is this info correct? [y/n] " loop
        if [ "$loop" = 'y' ]
         then
               #Make the directories for the users

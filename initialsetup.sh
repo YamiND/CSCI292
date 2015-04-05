@@ -18,39 +18,39 @@
 #
 if [[ $EUID -ne 0 ]]; then
   echo "You must be a root user" 2>&1
-  exit 1./
+  exit 1
 fi
       clear
       rm -rf /var/www/html
       echo "This script is meant to be run once on a new system install"
       echo "Or a system where sftp has not already been configured"
       echo "Running this script multiple times may have undesired consequences"
-      echo ""
-      echo ""
-      echo "We can restrict users to their own directory, or give them access to the whole system"
-      read -p "Would you like to chroot/jail your users? [y/n] " jail
-      case $jail in 
-      y)
-          echo ""
-          echo ""
-		      read -p "What is the group name that you want for ftp users? " groupname
+      #echo ""
+      #echo ""
+      #echo "We can restrict users to their own directory, or give them access to the whole system"
+      #read -p "Would you like to chroot/jail your users? [y/n] " jail
+      #case $jail in 
+      #y)
+       #   echo ""
+        #  echo ""
+		     # read -p "What is the group name that you want for ftp users? " groupname
 
-			    addgroup --system $groupname
+			    #addgroup --system $groupname
 
           #Any other subsystem ftp stuff can conflict with what we want
           #This will delete anything with Subsystem in it
-			    number=`grep -n "Subsystem" /etc/ssh/sshd_config | cut -d ":" -f1`
-      		sed -i "${number}d" /etc/ssh/sshd_config
-      		echo "Subsystem sftp internal-sftp" >> /etc/ssh/sshd_config
-      		echo "Match Group $groupname" >> /etc/ssh/sshd_config
-      		echo "ChrootDirectory %h" >> /etc/ssh/sshd_config
-      		echo "X11Forwarding no" >> /etc/ssh/sshd_config
-      		echo "AllowTcpForwarding no" >> /etc/ssh/sshd_config
-      		echo "ForceCommand internal-sftp" >> /etc/ssh/sshd_config
+			    #number=`grep -n "Subsystem" /etc/ssh/sshd_config | cut -d ":" -f1`
+      		#sed -i "${number}d" /etc/ssh/sshd_config
+      		#echo "Subsystem sftp internal-sftp" >> /etc/ssh/sshd_config
+      		#echo "Match Group $groupname" >> /etc/ssh/sshd_config
+      		##echo "ChrootDirectory %h" >> /etc/ssh/sshd_config
+      		#echo "X11Forwarding no" >> /etc/ssh/sshd_config
+      		#echo "AllowTcpForwarding no" >> /etc/ssh/sshd_config
+      		#echo "ForceCommand internal-sftp" >> /etc/ssh/sshd_config
       		
-      		  service ssh restart
-            ;;
-      n)
+      		 # service ssh restart
+            #;;
+      #n)
           echo ""
           echo ""
           read -p "What is the group name that you want for ftp users? " groupname
@@ -63,7 +63,7 @@ fi
           echo "Match Group $groupname" >> /etc/ssh/sshd_config
           echo "X11Forwarding no" >> /etc/ssh/sshd_config
           echo "AllowTcpForwarding no" >> /etc/ssh/sshd_config
-          echo "ForceCommand internal-sftp" >> /etc/ssh/sshd_config
+          #echo "ForceCommand internal-sftp" >> /etc/ssh/sshd_config
                   
             service ssh restart
             ;;
@@ -145,11 +145,11 @@ case $choice in
               #Change the password of the user
               echo "$NAME:$passwd" | chpasswd  
 
-          if [ "$jail" = 'y' ];
-            then
+          #if [ "$jail" = 'y' ];
+           # then
               #If the users are jailed root needs to own their directory
-              chown root:root /home/$NAME
-          fi
+            #  chown root:root /home/$NAME
+         # fi
               chmod 0755 /home/$NAME
               chown -R $NAME /home/$NAME/private/
               chown -R $NAME /var/www/$NAME/
@@ -229,11 +229,11 @@ case $choice in
               #Change the password of the user
               echo "$NAME:$passwd" | chpasswd  
 
-          if [ "$jail" = 'y' ];
-            then
+          #if [ "$jail" = 'y' ];
+            #then
               #If the users are jailed root needs to own their directory
-              chown root:root /home/$NAME
-          fi
+            #  chown root:root /home/$NAME
+          #fi
               chmod 0755 /home/$NAME
               cd /var/www/$NAME/
               #cp -avr wordpress/ /var/www/$NAME/
