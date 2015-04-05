@@ -61,7 +61,7 @@ case $choice in
       echo ""
       echo ""
       read -p "What would you like the user(s) passwords to be? " passwd
-        read -p "What is the root MySQL password? " rootpasswd
+      read -p "What is the root MySQL password? " rootpasswd
       echo "The file name and location you gave me was $dir/$file"
       echo "The password you gave me was $passwd"
       read -p "Is this correct? [y/n] " loop
@@ -93,7 +93,8 @@ case $choice in
               chown $NAME /home/$NAME
               chown -R $NAME /home/$NAME/private/
               chown -R $NAME /var/www/$NAME/
-              chmod 700 /home/$NAME
+              chmod 755 /home/$NAME
+              chmod 700 /home/$NAME/private
               
               cd /var/www/$NAME/
               #Give ownership
@@ -168,8 +169,9 @@ case $choice in
               chown $NAME /home/$NAME
               chown -R $NAME /home/$NAME/private/
               chown -R $NAME /var/www/$NAME/
-              chmod 700 /home/$NAME
-              
+              chmod 755 /home/$NAME
+              chmod 700 /home/$NAME/private
+
               cd /var/www/$NAME/
               #Give ownership
 
@@ -210,7 +212,6 @@ case $choice in
               rm /var/www/$NAME/latest.tar.gz  
   ;;
 esac
-            ;;
             n)
             ;;
       esac

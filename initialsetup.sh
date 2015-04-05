@@ -118,8 +118,9 @@ case $choice in
               chown $NAME /home/$NAME
               chown -R $NAME /home/$NAME/private/
               chown -R $NAME /var/www/$NAME/
-              chmod 700 /home/$NAME
-              
+              chmod 755 /home/$NAME
+              chmod 700 /home/$NAME/private
+
               cd /var/www/$NAME/
               #Give ownership
 
@@ -193,7 +194,8 @@ case $choice in
               chown $NAME /home/$NAME
               chown -R $NAME /home/$NAME/private/
               chown -R $NAME /var/www/$NAME/
-              chmod 700 /home/$NAME
+              chmod 755 /home/$NAME
+              chmod 700 /home/$NAME/private
               
               cd /var/www/$NAME/
               #Give ownership
