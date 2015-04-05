@@ -27,23 +27,8 @@ echo "If you want to play it safe, back up your /etc/ssh/sshd_config file"
 echo ""
 echo ""
 read -p "What is the group name of the FTP service you wish to remove? " groupname
-#read -p "Were these users Chrooted to their own directory? [y/n] " chroot 
-#case $chroot in
-	#	y)
-			#sed -i '/Subsystem sftp internal-sftp/d' /etc/ssh/sshd_config #this won't delete, that's on purpose
-      		#sed -i '/Match Group $groupname/d' /etc/ssh/sshd_config
-      	#	sed -i '/ChrootDirectory %h/d' /etc/ssh/sshd_config
-      		#sed -i '/X11Forwarding no/d' /etc/ssh/sshd_config
-      		#sed -i '/AllowTcpForwarding no/d' /etc/ssh/sshd_config
-      		#sed -i '/ForceCommand internal-sftp/d' /etc/ssh/sshd_config
-      	#	service ssh restart
-      #	;;
-      #	n)
 			sed -i '/Subsystem sftp internal-sftp/d' /etc/ssh/sshd_config #ditto
 			sed -i '/Match Group $groupname/d' /etc/ssh/sshd_config
-      		sed -i '/X11Forwarding no/d' /etc/ssh/sshd_config
-      		sed -i '/AllowTcpForwarding no/d' /etc/ssh/sshd_config
-      		sed -i '/ForceCommand internal-sftp/d' /etc/ssh/sshd_config
       		service ssh restart
 		;;
 esac
