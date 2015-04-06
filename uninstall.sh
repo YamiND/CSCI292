@@ -30,8 +30,6 @@ read -p "What is the group name of the FTP service you wish to remove? " groupna
 			sed -i '/Subsystem sftp internal-sftp/d' /etc/ssh/sshd_config #ditto
 			sed -i '/Match Group $groupname/d' /etc/ssh/sshd_config
       		service ssh restart
-		;;
-esac
 read -p "Would you like to delete all users in $groupname? [y/n] " dieusers
 case $dieusers in 
 		y)
