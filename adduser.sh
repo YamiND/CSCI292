@@ -215,8 +215,6 @@ case $choice in
               #Cleaning up
               rm name.sql
               rm /var/www/$NAME/latest.tar.gz  
-  ;;
-esac
             n)
             ;;
       esac
