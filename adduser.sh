@@ -215,8 +215,7 @@ case $choice in
               #Cleaning up
               rm name.sql
               rm /var/www/$NAME/latest.tar.gz  
-            n)
-            ;;
+          ;;
       esac
       mount -a
 echo "Your FTP user(s) should be all set up!"
