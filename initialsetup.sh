@@ -44,7 +44,7 @@ fi
           echo "DocumentRoot /var/www/" >> /etc/apache2/sites-available/students.conf
           echo "<Directory /var/www/>" >> /etc/apache2/sites-available/students.conf
           echo "AllowOverride All" >> /etc/apache2/sites-available/students.conf
-          echo "</Directory>" >> /etc/apache2/sites-available/students.config
+          echo "</Directory>" >> /etc/apache2/sites-available/students.conf
           echo "ErrorLog ${APACHE_LOG_DIR}/error.log" >> /etc/apache2/sites-available/students.conf
           echo "CustomLog ${APACHE_LOG_DIR}/access.log combined" >> /etc/apache2/sites-available/students.conf
           echo "</VirtualHost>" >> /etc/apache2/sites-available/students.conf
