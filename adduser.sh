@@ -205,6 +205,11 @@ case $choice in
               chown -R www-data /var/www/$NAME/wordpress/wp-content/
               chmod -R 755 /var/www/$NAME/wordpress/wp-content/uploads/
 
+              #htaccess file for permalink changes
+              touch /var/www/$NAME/wordpress/.htaccess
+              chown :www-data /var/www/$NAME/wordpress/.htaccess
+              chmod 664 /var/www/$NAME/wordpress/.htaccess
+              
               #Cleaning up
               rm name.sql
               rm /var/www/$NAME/latest.tar.gz  

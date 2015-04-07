@@ -39,6 +39,22 @@ fi
           echo "AllowTcpForwarding no" >> /etc/ssh/sshd_config        
           service ssh restart
 
+          echo  "<VirtualHost *:80>" >> /etc/apache2/sites-available/students.conf
+          echo "ServerAdmin webmaster@localhost" >> /etc/apache2/sites-available/students.conf
+          echo "DocumentRoot /var/www/" >> /etc/apache2/sites-available/students.conf
+          echo "<Directory /var/www/>" >> /etc/apache2/sites-available/students.conf
+          echo "AllowOverride All" >> /etc/apache2/sites-available/students.conf
+          echo "</Directory>" >> /etc/apache2/sites-available/students.config
+          echo "ErrorLog ${APACHE_LOG_DIR}/error.log" >> /etc/apache2/sites-available/students.conf
+          echo "CustomLog ${APACHE_LOG_DIR}/access.log combined" >> /etc/apache2/sites-available/students.conf
+          echo "</VirtualHost>" >> /etc/apache2/sites-available/students.conf
+          echo "# vim: syntax=apache ts=4 sw=4 sts=4 sr noet" >> /etc/apache2/sites-available/students.conf
+
+          a2enmod rewrite
+          a2dissite 000-default.conf
+          a2ensite students.conf
+          service apache2 restart
+
       read -p "Do you wish to add a user? [y/n] " user
       
       case $user in 
@@ -86,7 +102,7 @@ case $choice in
       echo ""
       echo ""
       read -p "What would you like the user(s) passwords to be? " passwd
-        read -p "What is the root MySQL password? " rootpasswd
+      read -p "What is the root MySQL password? " rootpasswd
       echo "The file name and location you gave me was $dir/$file"
       echo "The password you gave me was $passwd"
       read -p "Is this correct? [y/n] " loop
@@ -154,6 +170,12 @@ case $choice in
               mkdir /var/www/$NAME/wordpress/wp-content/uploads
               chown -R www-data /var/www/$NAME/wordpress/wp-content/
               chmod -R 755 /var/www/$NAME/wordpress/wp-content/uploads/
+
+              #htaccess file for permalink changes
+              touch /var/www/$NAME/wordpress/.htaccess
+              chown :www-data /var/www/$NAME/wordpress/.htaccess
+              chmod 664 /var/www/$NAME/wordpress/.htaccess
+
               #Cleaning up
               rm name.sql
               rm /var/www/$NAME/latest.tar.gz  
@@ -229,6 +251,11 @@ case $choice in
               chown -R www-data /var/www/$NAME/wordpress/wp-content/
               chmod -R 755 /var/www/$NAME/wordpress/wp-content/uploads/
 
+              #htaccess file for permalink changes
+              touch /var/www/$NAME/wordpress/.htaccess
+              chown :www-data /var/www/$NAME/wordpress/.htaccess
+              chmod 664 /var/www/$NAME/wordpress/.htaccess
+              
               #Cleaning up
               rm name.sql
               rm /var/www/$NAME/latest.tar.gz  
