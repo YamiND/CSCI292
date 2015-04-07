@@ -143,6 +143,7 @@ case $choice in
     echo ""
     read -p "What would you like the user(s) passwords to be? " passwd
     echo "The password you gave me was $passwd"
+    read -p "What is the root MySQL password? " rootpasswd
     echo ""
              #Make the directories for the users
               mkdir /home/$NAME
