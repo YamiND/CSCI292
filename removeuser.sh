@@ -63,6 +63,7 @@ case $choice in
 	2)
 	clear
 	read -p "What is the name of the FTP user you with to remove? " NAME
+  read -p "What is the mySQL root password? " rootpasswd
 			deluser --remove-home $NAME
             rm -rf /var/www/$NAME
             echo "drop database $NAME;" >> name.sql
