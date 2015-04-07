@@ -227,7 +227,7 @@ case $choice in
               chown -R $NAME:www-data *
               mkdir /var/www/$NAME/wordpress/wp-content/uploads
               chown -R www-data /var/www/$NAME/wordpress/wp-content/
-              chmod -R 755 www-data /var/www/$NAME/wordpress/wp-content/uploads/
+              chmod -R 755 /var/www/$NAME/wordpress/wp-content/uploads/
 
               #Cleaning up
               rm name.sql

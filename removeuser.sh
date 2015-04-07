@@ -22,7 +22,7 @@ if [[ $EUID -ne 0 ]]; then
 fi
 
 clear
-
+umount -a 
 echo "This script is designed to remove an FTP user that was added"
 echo "with my other script. This by no means is meant to remove users created with a different FTP setup"
 echo "You may also remove a batch list of FTP users"

@@ -75,8 +75,6 @@ case $choice in
               mkdir /home/$NAME/public_html 
               mkdir /home/$NAME/private
 
-              mkdir /var/www/$NAME/ 
-
               #Add the users and secure the crap out of them
               useradd -d /home/$NAME $NAME
               usermod -G $groupname $NAME
@@ -129,7 +127,8 @@ case $choice in
               #Apply permissions to the directories
               chown -R $NAME:www-data *
               mkdir /var/www/$NAME/wordpress/wp-content/uploads
-              chown -R :www-data /var/www/$NAME/wordpress/wp-content/uploads
+              chown -R www-data /var/www/$NAME/wordpress/wp-content/
+              chmod -R 755 /var/www/$NAME/wordpress/wp-content/uploads/
 
               #Cleaning up
               rm name.sql
@@ -151,8 +150,6 @@ case $choice in
               mkdir /home/$NAME/public_html 
               mkdir /home/$NAME/private
 
-              mkdir /var/www/$NAME/ 
-
               #Add the users and secure the crap out of them
               useradd -d /home/$NAME $NAME
               usermod -G $groupname $NAME
@@ -205,7 +202,8 @@ case $choice in
               #Apply permissions to the directories
               chown -R $NAME:www-data *
               mkdir /var/www/$NAME/wordpress/wp-content/uploads
-              chown -R :www-data /var/www/$NAME/wordpress/wp-content/uploads
+              chown -R www-data /var/www/$NAME/wordpress/wp-content/
+              chmod -R 755 /var/www/$NAME/wordpress/wp-content/uploads/
 
               #Cleaning up
               rm name.sql
