@@ -42,7 +42,7 @@ fi
           echo  "<VirtualHost *:80>" >> /etc/apache2/sites-available/students.conf
           echo "ServerAdmin webmaster@localhost" >> /etc/apache2/sites-available/students.conf
           echo "DocumentRoot /var/www/" >> /etc/apache2/sites-available/students.conf
-          echo "<Directory /var/www/>" >> /etc/apache2/sites-available/students.conf
+          echo "<Directory /var/www/ />" >> /etc/apache2/sites-available/students.conf
           echo "AllowOverride All" >> /etc/apache2/sites-available/students.conf
           echo "</Directory>" >> /etc/apache2/sites-available/students.conf
           echo "ErrorLog ${APACHE_LOG_DIR}/error.log" >> /etc/apache2/sites-available/students.conf
