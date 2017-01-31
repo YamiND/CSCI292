@@ -22,7 +22,6 @@ if [[ $EUID -ne 0 ]]; then
 fi
 
 clear
-umount -a 
 echo "This script is designed to remove an FTP user that was added"
 echo "with my other script. This by no means is meant to remove users created with a different FTP setup"
 echo "You may also remove a batch list of FTP users"
@@ -51,6 +50,7 @@ case $choice in
       	for NAME in $NAMES; do
       			deluser --remove-home $NAME
             rm -rf /var/www/$NAME
+	    sed -i "/$NAME/d" /etc/fstab
             echo "drop database $NAME;" >> name.sql
             echo "drop user '$NAME'@'localhost';" >> name.sql
             echo "FLUSH PRIVILEGES;" >> name.sql
@@ -66,6 +66,7 @@ case $choice in
   read -p "What is the mySQL root password? " rootpasswd
 			deluser --remove-home $NAME
             rm -rf /var/www/$NAME
+	    sed -i "/$NAME/d" /etc/fstab
             echo "drop database $NAME;" >> name.sql
             echo "drop user '$NAME'@'localhost';" >> name.sql
             echo "FLUSH PRIVILEGES;" >> name.sql
@@ -74,5 +75,7 @@ case $choice in
             rm name.sql
 	;;
 esac
+
+mount -a
 
 echo "Your FTP user(s) should now be removed and their directories deleted"
